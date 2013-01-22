@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QtNetwork/QNetworkAccessManager>
+#include <QSettings>
 
 namespace Ui {
 class MainWindow;
@@ -25,6 +26,11 @@ private:
     Ui::MainWindow *ui;
 
     QNetworkAccessManager *m_nam;
+
+    QStringList m_dataHistory;
+    QStringList m_urlHistory;
+
+    QSettings *m_settings;
 };
 
 #endif // MAINWINDOW_H

@@ -12,6 +12,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_nam = new QNetworkAccessManager(this);
     connect(m_nam, SIGNAL(finished(QNetworkReply*)), SLOT(networkReplyFinished(QNetworkReply*)));
+
+    m_settings = new QSettings("krest", QString(), this);
+    m_urlHistory = m_settings->value("urls").toStringList();
+    m_dataHistory = m_settings->value("data").toStringList();
+
+    ui->cbUrl->addItems(m_urlHistory);
+    ui->cbData->addItems(m_dataHistory);
 }
 
 MainWindow::~MainWindow()
@@ -21,8 +28,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
+    QString url = ui->cbUrl->currentText();
+    QString data = ui->cbData->currentText();
+
     QNetworkRequest request;
-    request.setUrl(ui->leAddressl->text());
+    request.setUrl(url);
 
     if(ui->rbGet->isChecked()) {
         m_nam->get(request);
@@ -30,7 +40,20 @@ void MainWindow::on_pushButton_clicked()
 
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-        m_nam->post(request, ui->leData->text().toUtf8());
+        m_nam->post(request, data.toLatin1());
+    }
+
+    if (!m_urlHistory.contains(url)) {
+        m_urlHistory.prepend(url);
+        ui->cbUrl->insertItem(0, url);
+
+        m_settings->setValue("urls", m_urlHistory);
+    }
+    if (!m_dataHistory.contains(data)) {
+        m_dataHistory.prepend(data);
+        ui->cbData->insertItem(0, data);
+
+        m_settings->setValue("data", m_dataHistory);
     }
 }
 

@@ -25,9 +25,15 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="leAddressl">
-        <property name="text">
-         <string>http://10.10.10.10:8080/jsonrpc</string>
+       <widget class="QComboBox" name="cbUrl">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -48,9 +54,9 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="leData">
-      <property name="text">
-       <string>{&quot;jsonrpc&quot;:&quot;2.0&quot;, &quot;method&quot;:&quot;JSONRPC.Introspect&quot;, &quot;id&quot;:3}</string>
+     <widget class="QComboBox" name="cbData">
+      <property name="editable">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
@@ -82,7 +88,7 @@
      <x>0</x>
      <y>0</y>
      <width>1362</width>
-     <height>34</height>
+     <height>39</height>
     </rect>
    </property>
   </widget>

@@ -11,8 +11,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    requestitem.cpp \
+    requestitemmodel.cpp \
+    bookmarkmodel.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    requestitem.h \
+    requestitemmodel.h \
+    bookmarkmodel.h
 
 FORMS    += mainwindow.ui

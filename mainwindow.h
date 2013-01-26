@@ -4,6 +4,10 @@
 #include <QMainWindow>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QSettings>
+#include <QModelIndex>
+
+class RequestItemModel;
+class BookmarkModel;
 
 namespace Ui {
 class MainWindow;
@@ -22,6 +26,12 @@ private slots:
 
     void networkReplyFinished(QNetworkReply *reply);
 
+    void bookmarkClicked(const QModelIndex &index);
+
+    void on_pushButton_2_clicked();
+
+    void on_tvBookmarks_customContextMenuRequested(const QPoint &pos);
+
 private:
     Ui::MainWindow *ui;
 
@@ -31,6 +41,8 @@ private:
     QStringList m_urlHistory;
 
     QSettings *m_settings;
+
+    BookmarkModel *m_bookmarkModel;
 };
 
 #endif // MAINWINDOW_H

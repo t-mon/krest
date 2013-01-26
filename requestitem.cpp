@@ -23,3 +23,13 @@ void RequestItem::setRequestData(const QByteArray &data)
 {
     m_requestData = data;
 }
+
+QNetworkAccessManager::Operation RequestItem::operation() const
+{
+    return m_operation;
+}
+
+void RequestItem::setOperation(QNetworkAccessManager::Operation operation)
+{
+    m_operation = operation;
+}

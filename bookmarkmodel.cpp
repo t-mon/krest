@@ -15,7 +15,6 @@ QModelIndex BookmarkModel::index(int row, int column, const QModelIndex &parent)
 {
     if (!parent.isValid()) {
         if (row < m_categoryList.count()) {
-            qDebug() << "index" << row << column << m_categoryList.count();
             return createIndex(row, column, m_categoryList.at(row).second);
         }
         return QModelIndex();
@@ -45,7 +44,6 @@ int BookmarkModel::rowCount(const QModelIndex &parent) const
 {
     // root item
     if (!parent.isValid()) {
-        qDebug() << "rowcount is" << m_categoryList.count();
         return m_categoryList.count();
     }
 
@@ -66,7 +64,6 @@ QVariant BookmarkModel::data(const QModelIndex &index, int role) const
 {
     if (!index.parent().isValid()) {
         if (role == Qt::DisplayRole) {
-            qDebug() << "data" << m_categoryList.at(index.row()).first;
             return m_categoryList.at(index.row()).first;
         }
         return QVariant();

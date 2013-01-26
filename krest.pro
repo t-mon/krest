@@ -14,11 +14,13 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     requestitem.cpp \
     requestitemmodel.cpp \
-    bookmarkmodel.cpp
+    bookmarkmodel.cpp \
+    core.cpp
 
 HEADERS  += mainwindow.h \
     requestitem.h \
     requestitemmodel.h \
-    bookmarkmodel.h
+    bookmarkmodel.h \
+    core.h
 
 FORMS    += mainwindow.ui

@@ -18,7 +18,6 @@ RequestItemModel::~RequestItemModel()
 
 int RequestItemModel::rowCount(const QModelIndex &parent) const
 {
-    qDebug() << "rc" << m_items.count();
     return m_items.count();
 }
 

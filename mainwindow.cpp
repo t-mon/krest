@@ -1,15 +1,18 @@
 #include "mainwindow.h"
-#include "requestitemmodel.h"
+
+#include "core.h"
+//#include "requestitemmodel.h"
 #include "requestitem.h"
 #include "bookmarkmodel.h"
 
 #include "ui_mainwindow.h"
 
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
+//#include <QtNetwork/QNetworkRequest>
+//#include <QtNetwork/QNetworkReply>
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QDebug>
+#include <QUrl>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,28 +24,21 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->splitter->setStretchFactor(0, 20);
     ui->splitter->setStretchFactor(1, 80);
-    m_nam = new QNetworkAccessManager(this);
-    connect(m_nam, SIGNAL(finished(QNetworkReply*)), SLOT(networkReplyFinished(QNetworkReply*)));
 
-    m_settings = new QSettings("krest", QString(), this);
-    m_urlHistory = m_settings->value("urls").toStringList();
-    m_dataHistory = m_settings->value("data").toStringList();
+    ui->tvBookmarks->setModel(Core::instance()->bookmarks());
 
-    ui->cbUrl->addItems(m_urlHistory);
-    ui->cbData->addItems(m_dataHistory);
-
-    m_bookmarkModel = new BookmarkModel(this);
-    m_bookmarkModel->loadFromSettings(m_settings);
-
-    ui->tvBookmarks->setModel(m_bookmarkModel);
-
+    connect(Core::instance(), SIGNAL(replyReceived(QByteArray)), SLOT(replyReceived(QByteArray)));
     connect(ui->tvBookmarks, SIGNAL(clicked(QModelIndex)), SLOT(bookmarkClicked(QModelIndex)));
 }
 
 MainWindow::~MainWindow()
 {
-    m_bookmarkModel->saveToSettings(m_settings);
     delete ui;
+}
+
+void MainWindow::replyReceived(const QByteArray &data)
+{
+    ui->plainTextEdit->setPlainText(data);
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -50,41 +46,34 @@ void MainWindow::on_pushButton_clicked()
     QString url = ui->cbUrl->currentText();
     QString data = ui->cbData->currentText();
 
-    QNetworkRequest request;
-    request.setUrl(url);
+    RequestItem *item = new RequestItem();
+    item->setUrl(QUrl(url));
 
-    if(ui->rbGet->isChecked()) {
-        m_nam->get(request);
-    } else if(ui->rbPost->isChecked()) {
-
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-
-        m_nam->post(request, data.toLatin1());
+    if (ui->rbGet->isChecked()) {
+        item->setOperation(QNetworkAccessManager::GetOperation);
+    } else if (ui->rbPost->isChecked()) {
+        item->setOperation(QNetworkAccessManager::PostOperation);
+        item->setRequestData(data.toLatin1());
     }
 
-    if (!m_urlHistory.contains(url)) {
-        m_urlHistory.prepend(url);
-        ui->cbUrl->insertItem(0, url);
+    Core::instance()->sendRequest(item);
 
-        m_settings->setValue("urls", m_urlHistory);
+    int index = ui->cbUrl->findText(url);
+    if (index >= 0) {
+        ui->cbUrl->removeItem(index);
     }
-    if (!m_dataHistory.contains(data)) {
-        m_dataHistory.prepend(data);
-        ui->cbData->insertItem(0, data);
+    ui->cbUrl->insertItem(0, url);
 
-        m_settings->setValue("data", m_dataHistory);
+    index = ui->cbData->findText(data);
+    if (index >= 0) {
+        ui->cbData->removeItem(index);
     }
-}
-
-void MainWindow::networkReplyFinished(QNetworkReply *reply)
-{
-
-    ui->plainTextEdit->setPlainText(reply->readAll());
+    ui->cbData->insertItem(0, data);
 }
 
 void MainWindow::bookmarkClicked(const QModelIndex &index)
 {
-    RequestItem *item = m_bookmarkModel->item(index);
+    RequestItem *item = Core::instance()->bookmarks()->item(index);
     if (item) {
 
         int i = ui->cbUrl->findText(item->url().toString());
@@ -93,6 +82,15 @@ void MainWindow::bookmarkClicked(const QModelIndex &index)
         } else {
             ui->cbUrl->insertItem(0, item->url().toString());
             ui->cbUrl->setCurrentIndex(0);
+        }
+
+        switch (item->operation()) {
+        case QNetworkAccessManager::GetOperation:
+            ui->rbGet->setChecked(true);
+            break;
+        case QNetworkAccessManager::PostOperation:
+            ui->rbPost->setChecked(true);
+            break;
         }
 
         i = ui->cbData->findText(item->requestData());
@@ -114,7 +112,7 @@ void MainWindow::on_pushButton_2_clicked()
         RequestItem *item = new RequestItem();
         item->setUrl(ui->cbUrl->currentText());
         item->setRequestData(ui->cbData->currentText().toLocal8Bit());
-        m_bookmarkModel->addBookmark(name, item);
+        Core::instance()->bookmarks()->addBookmark(name, item);
     }
 }
 
@@ -132,7 +130,7 @@ void MainWindow::on_tvBookmarks_customContextMenuRequested(const QPoint &pos)
         QModelIndex index = ui->tvBookmarks->indexAt(pos);
         if (index.isValid()) {
             if (QMessageBox::question(this, "Remove?", "Delete this item and all of its content?", QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
-                m_bookmarkModel->removeItem(index);
+                Core::instance()->bookmarks()->removeItem(index);
             }
         }
     }

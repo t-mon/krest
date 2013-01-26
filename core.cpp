@@ -37,8 +37,6 @@ void Core::init()
     connect(m_nam, SIGNAL(finished(QNetworkReply*)), SLOT(networkReplyFinished(QNetworkReply*)));
 
     m_settings = new QSettings("krest", QString(), this);
-    m_urlHistory = m_settings->value("urls").toStringList();
-    m_dataHistory = m_settings->value("data").toStringList();
 
     m_bookmarkModel = new BookmarkModel(this);
     m_bookmarkModel->loadFromSettings(m_settings);

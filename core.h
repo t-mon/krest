@@ -36,9 +36,6 @@ private:
     
     QNetworkAccessManager *m_nam;
 
-    QStringList m_dataHistory;
-    QStringList m_urlHistory;
-
     QSettings *m_settings;
 
     BookmarkModel *m_bookmarkModel;

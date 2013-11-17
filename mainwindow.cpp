@@ -63,12 +63,14 @@ void MainWindow::on_pushButton_clicked()
         ui->cbUrl->removeItem(index);
     }
     ui->cbUrl->insertItem(0, url);
+    ui->cbUrl->setCurrentIndex(0);
 
     index = ui->cbData->findText(data);
     if (index >= 0) {
         ui->cbData->removeItem(index);
     }
     ui->cbData->insertItem(0, data);
+    ui->cbData->setCurrentIndex(0);
 }
 
 void MainWindow::bookmarkClicked(const QModelIndex &index)

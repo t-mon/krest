@@ -14,6 +14,10 @@
 #include <QDebug>
 #include <QUrl>
 
+#if QT_VERSION >= 0x050000
+  #include <QJsonDocument>
+#endif
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -38,7 +42,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::replyReceived(const QByteArray &data)
 {
-    ui->plainTextEdit->setPlainText(data);
+    QByteArray formattedData = data;
+#if QT_VERSION >= 0x050000
+    QJsonParseError error;
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(data, &error);
+    if (error.error == QJsonParseError::NoError) {
+        formattedData = jsonDoc.toJson();
+    }
+#endif
+    ui->plainTextEdit->setPlainText(formattedData);
 }
 
 void MainWindow::on_pushButton_clicked()

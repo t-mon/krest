@@ -6,6 +6,7 @@
 #include "bookmarkmodel.h"
 
 #include "ui_mainwindow.h"
+#include "addbookmarkdialog.h"
 
 //#include <QtNetwork/QNetworkRequest>
 //#include <QtNetwork/QNetworkReply>
@@ -66,6 +67,9 @@ void MainWindow::on_pushButton_clicked()
     } else if (ui->rbPost->isChecked()) {
         item->setOperation(QNetworkAccessManager::PostOperation);
         item->setRequestData(data.toLatin1());
+    } else if (ui->rbPut->isChecked()) {
+        item->setOperation(QNetworkAccessManager::PutOperation);
+        item->setRequestData(data.toLatin1());
     }
 
     Core::instance()->sendRequest(item);
@@ -105,6 +109,9 @@ void MainWindow::bookmarkClicked(const QModelIndex &index)
         case QNetworkAccessManager::PostOperation:
             ui->rbPost->setChecked(true);
             break;
+        case QNetworkAccessManager::PutOperation:
+            ui->rbPut->setChecked(true);
+            break;
         }
 
         i = ui->cbData->findText(item->requestData());
@@ -121,12 +128,20 @@ void MainWindow::bookmarkClicked(const QModelIndex &index)
 void MainWindow::on_pushButton_2_clicked()
 {
     bool ok;
-    QString name = QInputDialog::getText(this, "Add Bookmark", "Enter category name", QLineEdit::Normal, QString(), &ok );
-    if (ok) {
+    AddBookmarkDialog dialog;
+    if(dialog.exec()) {
         RequestItem *item = new RequestItem();
+        item->setName(dialog.name());
         item->setUrl(ui->cbUrl->currentText());
         item->setRequestData(ui->cbData->currentText().toLocal8Bit());
-        Core::instance()->bookmarks()->addBookmark(name, item);
+        if (ui->rbGet->isChecked()) {
+            item->setOperation(QNetworkAccessManager::GetOperation);
+        } else if (ui->rbPost->isChecked()) {
+            item->setOperation(QNetworkAccessManager::PostOperation);
+        } else if (ui->rbPut->isChecked()) {
+            item->setOperation(QNetworkAccessManager::PutOperation);
+        }
+        Core::instance()->bookmarks()->addBookmark(dialog.category(), item);
     }
 }
 

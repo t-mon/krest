@@ -4,6 +4,16 @@ RequestItem::RequestItem()
 {
 }
 
+QString RequestItem::name() const
+{
+    return m_name;
+}
+
+void RequestItem::setName(const QString &name)
+{
+    m_name = name;
+}
+
 QUrl RequestItem::url() const
 {
     return m_url;

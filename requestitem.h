@@ -9,6 +9,9 @@ class RequestItem
 public:
     RequestItem();
 
+    QString name() const;
+    void setName(const QString &name);
+
     QUrl url() const;
     void setUrl(const QUrl &url);
 
@@ -19,6 +22,7 @@ public:
     void setOperation(QNetworkAccessManager::Operation operation);
 
 private:
+    QString m_name;
     QUrl m_url;
     QByteArray m_requestData;
     QNetworkAccessManager::Operation m_operation;

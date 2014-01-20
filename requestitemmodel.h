@@ -11,6 +11,7 @@ class RequestItemModel : public QAbstractListModel
     Q_OBJECT
 public:
     enum Role {
+        RoleName,
         RoleUrl,
         RoleData
     };

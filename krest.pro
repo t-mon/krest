@@ -15,12 +15,15 @@ SOURCES += main.cpp\
     requestitem.cpp \
     requestitemmodel.cpp \
     bookmarkmodel.cpp \
-    core.cpp
+    core.cpp \
+    addbookmarkdialog.cpp
 
 HEADERS  += mainwindow.h \
     requestitem.h \
     requestitemmodel.h \
     bookmarkmodel.h \
-    core.h
+    core.h \
+    addbookmarkdialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    addbookmarkdialog.ui

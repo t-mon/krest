@@ -57,12 +57,20 @@ void Core::sendRequest(RequestItem *item)
     QNetworkRequest request;
     request.setUrl(item->url());
 
-    if (item->operation() == QNetworkAccessManager::GetOperation) {
+    switch (item->operation()) {
+    case QNetworkAccessManager::GetOperation:
         m_nam->get(request);
-    } else if(item->operation() == QNetworkAccessManager::PostOperation) {
-
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+        break;
+    case QNetworkAccessManager::PostOperation:
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+//        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
         m_nam->post(request, item->requestData());
+        break;
+    case QNetworkAccessManager::PutOperation:
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+//        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+        m_nam->put(request, item->requestData());
+        break;
     }
 }
 

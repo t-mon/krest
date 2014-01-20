@@ -24,6 +24,8 @@ int RequestItemModel::rowCount(const QModelIndex &parent) const
 QVariant RequestItemModel::data(const QModelIndex &index, int role) const
 {
     switch (role) {
+    case RoleName:
+        return m_items.at(index.row())->name();
     case RoleUrl:
         return m_items.at(index.row())->url();
     case RoleData:
@@ -69,7 +71,9 @@ void RequestItemModel::loadFromSettings(QSettings *settings)
         settings->beginGroup(QString::number(i));
         RequestItem *item = new RequestItem();
         item->setUrl(settings->value("url").toUrl());
+        item->setName(settings->value("name", item->url()).toString());
         item->setRequestData(settings->value("data").toByteArray());
+        item->setOperation((QNetworkAccessManager::Operation)settings->value("operation", 0).toInt());
         insertItem(item);
         settings->endGroup();
     }
@@ -81,8 +85,10 @@ void RequestItemModel::saveToSettings(QSettings *settings)
     settings->beginGroup("requests");
     for (int i = 0; i < m_items.count(); ++i) {
         settings->beginGroup(QString::number(i));
+        settings->setValue("name", m_items.at(i)->name());
         settings->setValue("url", m_items.at(i)->url());
         settings->setValue("data", m_items.at(i)->requestData());
+        settings->setValue("operation", m_items.at(i)->operation());
         settings->endGroup();
     }
     settings->endGroup();

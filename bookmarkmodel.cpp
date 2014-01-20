@@ -71,7 +71,7 @@ QVariant BookmarkModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole) {
         RequestItemModel *model = static_cast<RequestItemModel*>(index.parent().internalPointer());
-        return model->data(model->index(index.row(), 0), RequestItemModel::RoleUrl).toString();
+        return model->data(model->index(index.row(), 0), RequestItemModel::RoleName).toString();
     }
     return QVariant();
 }

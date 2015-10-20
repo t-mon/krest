@@ -61,6 +61,9 @@ void Core::sendRequest(RequestItem *item)
     case QNetworkAccessManager::GetOperation:
         m_nam->get(request);
         break;
+    case QNetworkAccessManager::DeleteOperation:
+        m_nam->deleteResource(request);
+        break;
     case QNetworkAccessManager::PostOperation:
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 //        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -76,6 +79,9 @@ void Core::sendRequest(RequestItem *item)
 
 void Core::networkReplyFinished(QNetworkReply *reply)
 {
-    emit replyReceived(reply->readAll());
+    int status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    QString statusText = reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
+
+    emit replyReceived(reply->readAll(), QString("%1 %2").arg(QString::number(status)).arg(statusText));
 }
 

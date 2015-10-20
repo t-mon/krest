@@ -36,7 +36,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1" colspan="4">
+          <item row="0" column="1" colspan="5">
            <widget class="QComboBox" name="cbUrl">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -49,7 +49,7 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="4">
+          <item row="1" column="5">
            <spacer name="horizontalSpacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -69,7 +69,7 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1" colspan="4">
+          <item row="2" column="1" colspan="5">
            <widget class="QComboBox" name="cbData">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -88,21 +88,31 @@
              <string>POST</string>
             </property>
             <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QRadioButton" name="rbGet">
-            <property name="text">
-             <string>GET</string>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
           <item row="1" column="3">
            <widget class="QRadioButton" name="rbPut">
             <property name="text">
-             <string>PUT</string>
+             <string>P&amp;UT</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QRadioButton" name="rbGet">
+            <property name="text">
+             <string>&amp;GET</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QRadioButton" name="rbDelete">
+            <property name="text">
+             <string>&amp;DELETE</string>
             </property>
            </widget>
           </item>
@@ -110,6 +120,29 @@
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="responseLable">
+            <property name="text">
+             <string>Response code:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="statusLable">
+            <property name="baseSize">
+             <size>
+              <width>40</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="autoFillBackground">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
           <item>
            <spacer name="horizontalSpacer_2">
             <property name="orientation">
@@ -160,7 +193,7 @@
      <x>0</x>
      <y>0</y>
      <width>1362</width>
-     <height>34</height>
+     <height>28</height>
     </rect>
    </property>
   </widget>

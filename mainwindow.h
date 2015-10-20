@@ -17,7 +17,7 @@ public:
     ~MainWindow();
     
 private slots:
-    void replyReceived(const QByteArray &data);
+    void replyReceived(const QByteArray &data, const QString &status);
 
     void on_pushButton_clicked();
     void bookmarkClicked(const QModelIndex &index);

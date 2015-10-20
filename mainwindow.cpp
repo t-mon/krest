@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->tvBookmarks->setModel(Core::instance()->bookmarks());
 
-    connect(Core::instance(), SIGNAL(replyReceived(QByteArray)), SLOT(replyReceived(QByteArray)));
+    connect(Core::instance(), SIGNAL(replyReceived(QByteArray,QString)), SLOT(replyReceived(QByteArray,QString)));
     connect(ui->tvBookmarks, SIGNAL(clicked(QModelIndex)), SLOT(bookmarkClicked(QModelIndex)));
 }
 
@@ -41,7 +41,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::replyReceived(const QByteArray &data)
+void MainWindow::replyReceived(const QByteArray &data, const QString &status)
 {
     QByteArray formattedData = data;
 #if QT_VERSION >= 0x050000
@@ -51,6 +51,7 @@ void MainWindow::replyReceived(const QByteArray &data)
         formattedData = jsonDoc.toJson();
     }
 #endif
+    ui->statusLable->setText(status);
     ui->plainTextEdit->setPlainText(formattedData);
 }
 
@@ -64,6 +65,8 @@ void MainWindow::on_pushButton_clicked()
 
     if (ui->rbGet->isChecked()) {
         item->setOperation(QNetworkAccessManager::GetOperation);
+    } else if (ui->rbDelete->isChecked()) {
+        item->setOperation(QNetworkAccessManager::DeleteOperation);
     } else if (ui->rbPost->isChecked()) {
         item->setOperation(QNetworkAccessManager::PostOperation);
         item->setRequestData(data.toLatin1());
@@ -106,6 +109,9 @@ void MainWindow::bookmarkClicked(const QModelIndex &index)
         case QNetworkAccessManager::GetOperation:
             ui->rbGet->setChecked(true);
             break;
+        case QNetworkAccessManager::DeleteOperation:
+            ui->rbDelete->setChecked(true);
+            break;
         case QNetworkAccessManager::PostOperation:
             ui->rbPost->setChecked(true);
             break;
@@ -136,6 +142,8 @@ void MainWindow::on_pushButton_2_clicked()
         item->setRequestData(ui->cbData->currentText().toLocal8Bit());
         if (ui->rbGet->isChecked()) {
             item->setOperation(QNetworkAccessManager::GetOperation);
+        } else if (ui->rbDelete->isChecked()) {
+            item->setOperation(QNetworkAccessManager::DeleteOperation);
         } else if (ui->rbPost->isChecked()) {
             item->setOperation(QNetworkAccessManager::PostOperation);
         } else if (ui->rbPut->isChecked()) {

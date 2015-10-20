@@ -26,7 +26,7 @@ public:
     void sendRequest(RequestItem *item);
     
 signals:
-    void replyReceived(const QByteArray &data);
+    void replyReceived(const QByteArray &data, const QString &status);
 
 private slots:
     void networkReplyFinished(QNetworkReply *reply);
